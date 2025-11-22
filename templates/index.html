@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="static/Screenshot 2025-08-20 193557.ico">
+  <title>Fraud Sentinel - Smart Fraud Detection</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    .hero-content { display: flex; justify-content: space-between; align-items: center; gap: 40px; }
+    .hero-text { flex: 1; }
+    .hero-diagram { flex: 1; display: flex; justify-content: center; }
+    .diagram { position: relative; width: 250px; height: 250px; }
+    .center-circle {
+      width: 120px; height: 120px;
+      background: linear-gradient(135deg, #7a5af8, #5d2eea);
+      border-radius: 50%; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .diamond { width: 50px; height: 50px; background: white; transform: rotate(45deg); }
+    .outer-circle {
+      width: 50px; height: 50px; background: #6b4ce6; border-radius: 50%;
+      position: absolute; display: flex; align-items: center; justify-content: center;
+      font-size: 20px; color: white;
+    }
+    .outer-circle.top { top: -15px; left: 50%; transform: translateX(-50%); }
+    .outer-circle.right { right: -15px; top: 50%; transform: translateY(-50%); }
+    .outer-circle.bottom { bottom: -15px; left: 50%; transform: translateX(-50%); }
+    .outer-circle.left { left: -15px; top: 50%; transform: translateY(-50%); }
+
+    /* Fraud form */
+    .fraud-form { margin-top: 20px; max-width: 500px; }
+    .fraud-form input, .fraud-form select {
+      width: 100%; padding: 8px; margin: 6px 0;
+      border: 1px solid #ccc; border-radius: 4px;
+    }
+    .fraud-form button {
+      margin-top: 10px; padding: 10px 15px;
+      background: #5d2eea; color: white; border: none; border-radius: 4px;
+      cursor: pointer;
+    }
+    .fraud-form button:hover { background: #7a5af8; }
+    .fraud-results { margin-top: 15px; padding: 12px; border: 1px solid #ddd; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="nav-container">
+      <div class="logo">
+        <div class="logo-icon">🛡️</div>
+        <span>Fraud Sentinel</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#Predictor" class="nav-link">Predictor</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero-section" id="home">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>Stop Fraud Before <span class="gradient-text">It Happens</span></h1>
+        <p>Advanced AI-powered fraud detection that learns from your data to protect your business in real-time.</p>
+        <div class="metrics">
+          <div class="metric"><span class="metric-value">99.7%</span><span class="metric-label">Accuracy Rate</span></div>
+          <div class="metric"><span class="metric-value">&lt;100ms</span><span class="metric-label">Response Time</span></div>
+          <div class="metric"><span class="metric-value">24/7</span><span class="metric-label">Monitoring</span></div>
+        </div>
+      </div>
+      <div class="hero-diagram">
+        <div class="diagram">
+          <div class="center-circle"><div class="diamond"></div></div>
+          <div class="outer-circle top">💲</div>
+          <div class="outer-circle right">⚠️</div>
+          <div class="outer-circle bottom">📊</div>
+          <div class="outer-circle left">✔️</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="features-section" id="features">
+    <div class="section-container">
+      <h2>Key Features</h2>
+      <p>Everything you need to protect your business from fraud</p>
+      <div class="features-grid">
+        <div class="feature-card"><div class="feature-icon">🤖</div><h3>AI-Powered Detection</h3><p>Detects fraud patterns using ML.</p></div>
+        <div class="feature-card"><div class="feature-icon">⚡</div><h3>Real-Time Processing</h3><p>Sub-100ms response times.</p></div>
+        <div class="feature-card"><div class="feature-icon">🔒</div><h3>Advanced Security</h3><p>Enterprise-grade encryption.</p></div>
+        <div class="feature-card"><div class="feature-icon">📊</div><h3>Smart Analytics</h3><p>Reports & dashboards.</p></div>
+        <div class="feature-card"><div class="feature-icon">⚙️</div><h3>Easy Integration</h3><p>Simple API integration.</p></div>
+        <div class="feature-card"><div class="feature-icon">📞</div><h3>24/7 Support</h3><p>Dedicated managers and training.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="how-it-works-section" id="how-it-works">
+    <div class="section-container">
+      <h2>How It Works</h2>
+      <p>Fraud detection in 4 easy steps</p>
+      <div class="steps-grid">
+        <div class="step-card"><div class="step-icon">☁️</div><h3>Step 1: Input Data</h3><p>Provide product & website details.</p></div>
+        <div class="step-card"><div class="step-icon">🤖</div><h3>Step 2: AI Analysis</h3><p>Models analyze behaviors and anomalies.</p></div>
+        <div class="step-card"><div class="step-icon">⚠️</div><h3>Step 3: Detect Fraud</h3><p>Identify suspicious activities with risk scores.</p></div>
+        <div class="step-card"><div class="step-icon">✅</div><h3>Step 4: Take Action</h3><p>Receive alerts and stop fraud instantly.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Demo -->
+  <div class="demo-section" id="Predictor">
+    <div class="section-container">
+      <h2>Try Our Fraud Predictor</h2>
+      <p>Enter product details to check fraud probability</p>
+
+      <!-- Fraud Check Form -->
+      <div class="fraud-form">
+        <h3>🔍 Fraud Risk Check</h3>
+        <input type="text" id="websiteUrl" placeholder="Website URL (e.g., example.com)" />
+        <input type="text" id="productName" placeholder="Product Name (optional)" />
+        <select id="productCategory">
+          <option value="electronics">Electronics</option>
+          <option value="fashion">Fashion</option>
+          <option value="gift_card">Gift Card</option>
+          <option value="luxury">Luxury</option>
+          <option value="digital">Digital Goods</option>
+          <option value="other" selected>Other</option>
+        </select>
+        <input type="number" id="productPrice" placeholder="Product Price" />
+        <button onclick="checkFraud()">Check Fraud Risk</button>
+
+        <div id="fraudResults" class="fraud-results" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer"><div class="section-container"><p>&copy; 2025 Fraud Sentinel</p></div></div>
+
+  <script>
+    function checkFraud() {
+      const websiteUrl = document.getElementById("websiteUrl").value;
+      const productName = document.getElementById("productName").value;
+      const productCategory = document.getElementById("productCategory").value;
+      const productPrice = document.getElementById("productPrice").value;
+
+      fetch("/predict_product", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          website_url: websiteUrl,
+          product_name: productName,
+          product_category: productCategory,
+          product_price: productPrice
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        const resultDiv = document.getElementById("fraudResults");
+        if (data.ok) {
+          let reasonsList = "";
+          if (data.reasons && data.reasons.length) {
+            reasonsList = "<ul>" + data.reasons.map(r => `<li>${r}</li>`).join("") + "</ul>";
+          }
+          resultDiv.innerHTML = `
+            <h4>Prediction: ${data.label}</h4>
+            <p><strong>Fraud Probability:</strong> ${(data.probability*100).toFixed(2)}%</p>
+            ${reasonsList}
+          `;
+        } else {
+          resultDiv.innerHTML = `<p style="color:red;">${data.error}</p>`;
+        }
+        resultDiv.style.display = "block";
+      })
+      .catch(err => {
+        document.getElementById("fraudResults").innerHTML = `<p style="color:red;">${err.message}</p>`;
+        document.getElementById("fraudResults").style.display = "block";
+      });
+    }
+  </script>
+</body>
+</html>
