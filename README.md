@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 # 🛡️ Fraud Sentinel
 #### AI-Powered Online Product Fraud Detection System
 
@@ -103,6 +101,3 @@ http://127.0.0.1:5000
 ## 📜 License
 
 This project is developed for academic and educational purposes.
-=======
-# Fraud-Sentinel
->>>>>>> e9a88ed6 (Initial clean commit)
