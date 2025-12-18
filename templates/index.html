@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="static/Screenshot 2025-08-20 193557.ico">
+  <title>Fraud Sentinel - Smart Fraud Detection</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    .hero-content { display: flex; justify-content: space-between; align-items: center; gap: 40px; }
+    .hero-text { flex: 1; }
+    .hero-diagram { flex: 1; display: flex; justify-content: center; }
+    .diagram { position: relative; width: 250px; height: 250px; }
+    .center-circle {
+      width: 120px; height: 120px;
+      background: linear-gradient(135deg, #7a5af8, #5d2eea);
+      border-radius: 50%; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .diamond { width: 50px; height: 50px; background: white; transform: rotate(45deg); }
+    .outer-circle {
+      width: 50px; height: 50px; background: #6b4ce6; border-radius: 50%;
+      position: absolute; display: flex; align-items: center; justify-content: center;
+      font-size: 20px; color: white;
+    }
+    .outer-circle.top { top: -15px; left: 50%; transform: translateX(-50%); }
+    .outer-circle.right { right: -15px; top: 50%; transform: translateY(-50%); }
+    .outer-circle.bottom { bottom: -15px; left: 50%; transform: translateX(-50%); }
+    .outer-circle.left { left: -15px; top: 50%; transform: translateY(-50%); }
+
+    /* Fraud form */
+
+    .fraud-form { margin-top: 20px; max-width: 500px; }
+    .fraud-form input, .fraud-form select {
+      width: 100%; padding: 8px; margin: 6px 0;
+      border: 1px solid #ccc; border-radius: 4px;
+
+    .fraud-form { margin-top: 20px; max-width: 720px; }
+    .fraud-form input, .fraud-form select {
+      width: 100%; padding: 8px; margin: 6px 0;
+      border: 1px solid #ccc; border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .fraud-form input.invalid, .fraud-form select.invalid {
+      border-color: #e55353;
+      box-shadow: 0 0 0 3px rgba(229,83,83,0.08);
+
+    }
+    .fraud-form button {
+      margin-top: 10px; padding: 10px 15px;
+      background: #5d2eea; color: white; border: none; border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .fraud-form button:hover { background: #7a5af8; }
+    .fraud-results { margin-top: 15px; padding: 12px; border: 1px solid #ddd; border-radius: 5px; }
+
+    .fraud-form button[disabled] { opacity: 0.6; cursor: not-allowed; }
+    .fraud-form button:hover { background: #7a5af8; }
+
+    /* simplified results */
+    .fraud-results { margin-top: 15px; padding: 12px; border-radius: 8px; background: transparent; color:#072033; }
+
+    .minimal-card {
+      background: #f5f8fb;
+      color: #072033;
+      padding: 18px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(11,20,34,0.06);
+      max-width: 720px;
+    }
+    .minimal-title {
+      font-weight: 800;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+    .minimal-line {
+      font-size: 16px;
+      margin: 8px 0;
+      color: #11303f;
+    }
+    .minimal-line .score {
+      font-weight: 800;
+      font-size: 18px;
+      margin-left: 6px;
+    }
+    .minimal-line .pred-label {
+      font-weight: 800;
+    }
+
+    .toggle-btn {
+      margin-top: 10px; background: transparent; border: 1px dashed #ddd; color: #072033; padding: 8px 10px; border-radius: 6px; cursor: pointer;
+    }
+    .related-list { margin-top: 10px; display:grid; gap:8px; }
+    .related-item { background:#eef2f7; padding:10px; border-radius:8px; display:flex; gap:10px; align-items:center; justify-content:space-between; }
+    .related-left { display:flex; gap:10px; align-items:center; }
+    .related-site { min-width:86px; font-weight:800; color:#063; text-transform:capitalize; }
+    .related-meta { color:#2b3a4a; font-size:13px; max-width:520px; }
+    .related-link { font-size:13px; padding:6px 8px; background:#fff; border-radius:6px; border:1px solid #e6eef6; text-decoration:none; color:#063; }
+    .related-loading { color:#475569; padding:8px; background:#fff; border-radius:6px; margin-bottom:8px; }
+    .empty-msg { color:#475569; padding:12px; background:rgba(11,20,34,0.04); border-radius:8px; }
+
+    @media (max-width:600px) { .hero-content{flex-direction:column} .related-item{flex-direction:column;align-items:flex-start} .related-site{min-width:initial} }
+
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="nav-container">
+      <div class="logo">
+        <div class="logo-icon">🛡️</div>
+        <span>Fraud Sentinel</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#Predictor" class="nav-link">Predictor</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero-section" id="home">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>Stop Fraud Before <span class="gradient-text">It Happens</span></h1>
+        <p>Advanced AI-powered fraud detection that learns from your data to protect your business in real-time.</p>
+        <div class="metrics">
+          <div class="metric"><span class="metric-value">99.7%</span><span class="metric-label">Accuracy Rate</span></div>
+          <div class="metric"><span class="metric-value">&lt;100ms</span><span class="metric-label">Response Time</span></div>
+          <div class="metric"><span class="metric-value">24/7</span><span class="metric-label">Monitoring</span></div>
+        </div>
+      </div>
+      <div class="hero-diagram">
+        <div class="diagram">
+          <div class="center-circle"><div class="diamond"></div></div>
+          <div class="outer-circle top">💲</div>
+          <div class="outer-circle right">⚠️</div>
+          <div class="outer-circle bottom">📊</div>
+          <div class="outer-circle left">✔️</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="features-section" id="features">
+    <div class="section-container">
+      <h2>Key Features</h2>
+      <p>Everything you need to protect your business from fraud</p>
+      <div class="features-grid">
+        <div class="feature-card"><div class="feature-icon">🤖</div><h3>AI-Powered Detection</h3><p>Detects fraud patterns using ML.</p></div>
+        <div class="feature-card"><div class="feature-icon">⚡</div><h3>Real-Time Processing</h3><p>Sub-100ms response times.</p></div>
+        <div class="feature-card"><div class="feature-icon">🔒</div><h3>Advanced Security</h3><p>Enterprise-grade encryption.</p></div>
+        <div class="feature-card"><div class="feature-icon">📊</div><h3>Smart Analytics</h3><p>Reports & dashboards.</p></div>
+        <div class="feature-card"><div class="feature-icon">⚙️</div><h3>Easy Integration</h3><p>Simple API integration.</p></div>
+        <div class="feature-card"><div class="feature-icon">📞</div><h3>24/7 Support</h3><p>Dedicated managers and training.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="how-it-works-section" id="how-it-works">
+    <div class="section-container">
+      <h2>How It Works</h2>
+      <p>Fraud detection in 4 easy steps</p>
+      <div class="steps-grid">
+        <div class="step-card"><div class="step-icon">☁️</div><h3>Step 1: Input Data</h3><p>Provide product & website details.</p></div>
+        <div class="step-card"><div class="step-icon">🤖</div><h3>Step 2: AI Analysis</h3><p>Models analyze behaviors and anomalies.</p></div>
+        <div class="step-card"><div class="step-icon">⚠️</div><h3>Step 3: Detect Fraud</h3><p>Identify suspicious activities with risk scores.</p></div>
+        <div class="step-card"><div class="step-icon">✅</div><h3>Step 4: Take Action</h3><p>Receive alerts and stop fraud instantly.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Demo -->
+  <div class="demo-section" id="Predictor">
+    <div class="section-container">
+      <h2>Try Our Fraud Predictor</h2>
+      <p>Enter product details to check fraud probability</p>
+
+      <!-- Fraud Check Form -->
+      <div class="fraud-form">
+        <h3>🔍 Fraud Risk Check</h3>
+
+        <input type="text" id="websiteUrl" placeholder="Website URL (e.g., example.com)" />
+
+        <input type="text" id="websiteUrl" placeholder="Website URL (e.g., https://example.com/product/123)" />
+
+        <input type="text" id="productName" placeholder="Product Name (optional)" />
+        <select id="productCategory">
+          <option value="electronics">Electronics</option>
+          <option value="fashion">Fashion</option>
+          <option value="gift_card">Gift Card</option>
+          <option value="luxury">Luxury</option>
+          <option value="digital">Digital Goods</option>
+          <option value="other" selected>Other</option>
+        </select>
+<
+        <input type="number" id="productPrice" placeholder="Product Price" />
+        <button onclick="checkFraud()">Check Fraud Risk</button>
+
+
+        <input type="number" id="productPrice" placeholder="Product Price (numeric)" />
+        <button id="predictBtn" onclick="checkFraud()">Check</button>
+
+        <!-- RESULT (minimal output only) -->
+
+        <div id="fraudResults" class="fraud-results" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer"><div class="section-container"><p>&copy; 2025 Fraud Sentinel</p></div></div>
+
+
+  <script>
+    function checkFraud() {
+      const websiteUrl = document.getElementById("websiteUrl").value;
+      const productName = document.getElementById("productName").value;
+      const productCategory = document.getElementById("productCategory").value;
+      const productPrice = document.getElementById("productPrice").value;
+
+      fetch("/predict_product", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          website_url: websiteUrl,
+          product_name: productName,
+          product_category: productCategory,
+          product_price: productPrice
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        const resultDiv = document.getElementById("fraudResults");
+        if (data.ok) {
+          let reasonsList = "";
+          if (data.reasons && data.reasons.length) {
+            reasonsList = "<ul>" + data.reasons.map(r => `<li>${r}</li>`).join("") + "</ul>";
+          }
+          resultDiv.innerHTML = `
+            <h4>Prediction: ${data.label}</h4>
+            <p><strong>Fraud Probability:</strong> ${(data.probability*100).toFixed(2)}%</p>
+            ${reasonsList}
+          `;
+        } else {
+          resultDiv.innerHTML = `<p style="color:red;">${data.error}</p>`;
+        }
+        resultDiv.style.display = "block";
+      })
+      .catch(err => {
+        document.getElementById("fraudResults").innerHTML = `<p style="color:red;">${err.message}</p>`;
+        document.getElementById("fraudResults").style.display = "block";
+      });
+    }
+  </script>
+
+<script>
+  // helpers
+  function escapeHtml(s){ if (s===undefined||s===null) return ''; return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+  function clearResult(){ const r=document.getElementById('fraudResults'); r.innerHTML=''; r.style.display='none'; document.getElementById('websiteUrl').classList.remove('invalid'); document.getElementById('productPrice').classList.remove('invalid'); }
+  function formatProb(prob){
+    if (prob===undefined||prob===null||prob==='') return 'N/A';
+    // numeric 0..1 -> percent, numeric >1 and <=100 -> assume percent, else string
+    const n = Number(prob);
+    if (!isNaN(n)){
+      if (n > 0 && n <= 1) return (n*100).toFixed(2) + '%';
+      if (n >= 0 && n <= 100) return n.toFixed(2) + '%';
+      return String(prob);
+    }
+    const p = String(prob).trim();
+    if (p.endsWith('%')) return p;
+    // fallback
+    return p;
+  }
+
+  function normalizePrice(val){
+    if (val === null || val === undefined || val === '') return null;
+    try {
+      const s = String(val).replace(/[^\d\.\-]/g,'').trim();
+      if (s === '') return null;
+      const n = Number(s);
+      return isFinite(n) ? n : null;
+    } catch(e){ return null; }
+  }
+
+  // marketplace detection
+  function detectSiteLabel(url){
+    if (!url) return 'other';
+    try {
+      const u=url.replace(/^https?:\/\//,'').split('/')[0].toLowerCase();
+      if (u.includes('amazon.')) return 'amazon';
+      if (u.includes('flipkart.')) return 'flipkart';
+      if (u.includes('myntra.')) return 'myntra';
+      if (u.includes('snapdeal.')) return 'snapdeal';
+      if (u.includes('paytm.')) return 'paytm';
+      if (u.includes('ebay.')) return 'ebay';
+      return u.split('.')[0]||'other';
+    } catch(e){ return 'other'; }
+  }
+
+  // simple token-overlap similarity score (0..1)
+  function tokenOverlapScore(a,b){
+    if(!a||!b) return 0;
+    const clean = s => s.toLowerCase().replace(/[^\w\s]/g,' ').split(/\s+/).filter(Boolean);
+    const A = new Set(clean(a));
+    const B = new Set(clean(b));
+    if (A.size===0 || B.size===0) return 0;
+    let common=0;
+    A.forEach(t=>{ if (B.has(t)) common++; });
+    const union = new Set([...A,...B]).size;
+    return union===0 ? 0 : common/union;
+  }
+
+  // price proximity score (0..1), closer => 1
+  function priceProximityScore(p1,p2){
+    const n1 = normalizePrice(p1);
+    const n2 = normalizePrice(p2);
+    if (n1 == null || n2 == null) return 0.5; // unknown price gives neutral score
+    const diff = Math.abs(n1-n2);
+    const maxv = Math.max(Math.abs(n1), Math.abs(n2), 1);
+    const rel = Math.min(1, diff / maxv); // 0..1
+    return 1 - rel; // closer -> near 1
+  }
+
+  // composite match score
+  function matchScore(candidate, targetName, targetPrice){
+    const title = candidate.title || candidate.name || candidate.product || '';
+    const scoreTokens = tokenOverlapScore(title, targetName);
+    const scorePrice = priceProximityScore(candidate.price, targetPrice);
+    // weight tokens higher
+    return (scoreTokens * 0.75) + (scorePrice * 0.25);
+  }
+
+  // render list but filter to likely same product
+  function renderRelatedListMatched(items, targetName, targetPrice, maxShow=6, threshold=0.28){
+    if (!Array.isArray(items) || items.length===0) {
+      return '<div class="related-item">No matching product found on other websites</div>';
+    }
+    const scored = items.map(it=>{
+      return Object.assign({}, it, { _score: matchScore(it, targetName || '', targetPrice) });
+    });
+    scored.sort((a,b)=>b._score - a._score);
+    const matched = scored.filter(x=>x._score >= threshold);
+    if (matched.length===0) return '<div class="related-item">No matching product found on other websites</div>';
+    const limited = matched.slice(0, maxShow);
+    return limited.map(it=>{
+      const site = escapeHtml(detectSiteLabel(it.url || it.site || ''));
+      const title = escapeHtml(it.title || it.name || '');
+      const priceNum = normalizePrice(it.price);
+      const priceText = priceNum !== null ? ' • ' + priceNum.toLocaleString() : '';
+      const link = it.url ? escapeHtml(it.url) : '#';
+      return `<div class="related-item">
+                <div class="related-left">
+                  <div class="related-site">${site}</div>
+                  <div class="related-meta">${title}${priceText}</div>
+                </div>
+                <div><a class="related-link" href="${link}" target="_blank" rel="noopener noreferrer">Open</a></div>
+              </div>`;
+    }).join('');
+  }
+
+  // on-demand fetch & display (uses matching)
+  async function onShowRelatedClick(e){
+    const showBtn = e.currentTarget;
+    const hideBtn = document.getElementById('hideRelatedBtn');
+    const relatedContainer = document.getElementById('relatedContainer');
+
+    // Clear any cached data to ensure fresh fetch
+    if (relatedContainer._initialRelated) {
+      relatedContainer._initialRelated = [];
+    }
+
+    // Always fetch fresh data from backend to ensure proper filtering
+    relatedContainer.innerHTML = `<div class="related-loading">Fetching related products…</div>`;
+    relatedContainer.style.display = 'block';
+    showBtn.disabled = true;
+    showBtn.textContent = 'Loading…';
+
+    const payload = {
+      website_url: document.getElementById('websiteUrl').value || '',
+      product_name: document.getElementById('productName').value || '',
+      product_category: document.getElementById('productCategory').value || '',
+      product_price: normalizePrice(document.getElementById('productPrice').value || '')
+    };
+
+    console.log('Fetching related products with payload:', payload);
+
+    try {
+      const res = await fetch('/related_products', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok){
+        console.error('Related products fetch failed:', res.status, res.statusText);
+        const errorData = await res.json().catch(()=>({}));
+        console.error('Error details:', errorData);
+        relatedContainer.innerHTML = `<div class="related-item">Error fetching related products. Please try again.</div>`;
+      } else {
+        const data = await res.json().catch(()=>({}));
+        const list = data.related_products || data.related || data.items || [];
+        console.log('Received related products:', list.length, 'items');
+        if (list.length > 0) {
+          console.log('Sample products:', list.slice(0, 3).map(p => ({site: p.site, url: p.url, title: p.title?.substring(0, 50)})));
+        } else {
+          console.warn('No related products returned from backend');
+          console.log('Full response data:', JSON.stringify(data, null, 2));
+          console.log('Response keys:', Object.keys(data));
+          if (data.error) {
+            console.error('Backend error:', data.error);
+          }
+          if (data.targeted_by_site) {
+            console.log('Targeted by site:', data.targeted_by_site);
+          }
+        }
+        
+        // store for reuse (now filtered)
+        relatedContainer._initialRelated = Array.isArray(list) ? list : [];
+        
+        if (list.length === 0) {
+          let errorMsg = 'No related products found on other websites.';
+          if (data.debug) {
+            console.log('Debug info:', data.debug);
+            if (data.debug.message) {
+              errorMsg += ' ' + data.debug.message;
+            }
+            if (data.debug.serpapi_configured === false) {
+              errorMsg += ' Note: SERPAPI_KEY is not configured. Consider setting it for better search results.';
+            }
+          }
+          relatedContainer.innerHTML = `<div class="related-item">${errorMsg}</div>`;
+        } else {
+          relatedContainer.innerHTML = renderRelatedListMatched(relatedContainer._initialRelated, payload.product_name || (window._lastProductTitle||''), payload.product_price || null);
+        }
+      }
+
+      showBtn.style.display='none';
+      hideBtn.style.display='inline-block';
+    } catch(err){
+      console.error('related fetch error', err);
+      relatedContainer.innerHTML = `<div class="related-item">Failed to fetch related products</div>`;
+    } finally {
+      showBtn.disabled = false;
+      showBtn.textContent = 'Show related product from other website';
+    }
+  }
+
+  // build minimal result and wire show/hide (uses matching render)
+  function renderMinimal(data){
+    // cache backend-detected product title for matching fallback
+    const backendTitle = (data.product_details && (data.product_details.title || data.product_details.name)) || '';
+    if (backendTitle) window._lastProductTitle = backendTitle;
+
+    const rawScore = data.security_score ?? data.securityScore ?? data.score ?? null;
+    let scorePercent = 'N/A';
+    if (rawScore !== null && rawScore !== undefined && rawScore !== ''){
+      const n = Number(rawScore);
+      if (!isNaN(n)){
+        // if backend score looks like 0..5 convert to percent, else if >5 assume 0..100
+        if (n >= 0 && n <= 5) {
+          scorePercent = Math.round((n / 5) * 100) + '%';
+        } else if (n >= 0 && n <= 100) {
+          scorePercent = Math.round(n) + '%';
+        } else {
+          scorePercent = String(rawScore);
+        }
+      } else {
+        scorePercent = String(rawScore);
+      }
+    }
+
+    const predObj = data.prediction || data.pred || null;
+    const predLabel = predObj && (predObj.label || predObj.name) ? (predObj.label || predObj.name) : (data.prediction_label || data.pred_label || data.prediction) || 'N/A';
+    const predProbRaw = predObj && (predObj.prob || predObj.probability) ? (predObj.prob || predObj.probability) : (data.prediction_prob || data.pred_prob || data.prediction_probability);
+    const predProb = formatProb(predProbRaw);
+
+    const targetTitle = (document.getElementById('productName').value || backendTitle || '').trim();
+    const targetPrice = normalizePrice(document.getElementById('productPrice').value || (data.product_details && data.product_details.price) || null);
+
+    const resultDiv = document.getElementById('fraudResults');
+
+    let html = '';
+    html += `<div class="minimal-card">`;
+    html += `<div class="minimal-title">Product verification</div>`;
+    html += `<div class="minimal-line">Security score: <span class="score">${escapeHtml(scorePercent)}</span></div>`;
+    html += `<div class="minimal-line">Prediction: <span class="pred-label">${escapeHtml(predLabel)}</span> — ${escapeHtml(predProb)}</div>`;
+
+    // optional: show detected product title
+    if (backendTitle) {
+      html += `<div class="minimal-line">Detected product: <strong>${escapeHtml(backendTitle)}</strong></div>`;
+    }
+    html += `</div>`;
+
+    html += `<div style="margin-top:12px">`;
+    html += `<button id="showRelatedBtn" class="toggle-btn">Show related product from other website</button>`;
+    html += `<button id="hideRelatedBtn" class="toggle-btn" style="display:none">Hide related product</button>`;
+    html += `<div id="relatedContainer" style="display:none;margin-top:12px" class="related-list"></div>`;
+    html += `</div>`;
+
+    resultDiv.innerHTML = html;
+    resultDiv.style.display = 'block';
+
+    const showBtn = document.getElementById('showRelatedBtn');
+    const hideBtn = document.getElementById('hideRelatedBtn');
+    const relatedContainer = document.getElementById('relatedContainer');
+
+    const returnedRelated = data.related_products || data.related || [];
+    relatedContainer._initialRelated = Array.isArray(returnedRelated)?returnedRelated:[];
+
+    showBtn.addEventListener('click', onShowRelatedClick);
+    hideBtn.addEventListener('click', ()=>{
+      relatedContainer.style.display='none';
+      showBtn.style.display='inline-block';
+      hideBtn.style.display='none';
+    });
+  }
+
+  function renderValidationErrors(errors){
+    const resultDiv = document.getElementById('fraudResults');
+    let out = `<div class="empty-msg"><strong>Input errors:</strong><ul>`;
+    for (const [f,msg] of Object.entries(errors || {})){
+      out += `<li>${escapeHtml(f)}: ${escapeHtml(msg)}</li>`;
+    }
+    out += `</ul></div>`;
+    resultDiv.innerHTML = out; resultDiv.style.display='block';
+  }
+
+  // main predict call
+  async function checkFraud(){
+    clearResult();
+    const websiteUrl = document.getElementById('websiteUrl').value;
+    const productName = document.getElementById('productName').value;
+    const productCategory = document.getElementById('productCategory').value;
+    const productPriceRaw = document.getElementById('productPrice').value;
+    const productPrice = normalizePrice(productPriceRaw);
+    const btn = document.getElementById('predictBtn');
+    btn.disabled = true; btn.textContent = 'Checking...';
+
+    try {
+      const res = await fetch('/predict_product', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          website_url: websiteUrl || '',
+          product_name: productName || '',
+          product_category: productCategory || '',
+          // send numeric price or null
+          product_price: productPrice !== null ? productPrice : (productPriceRaw || '')
+        })
+      });
+
+      const data = await res.json().catch(()=>({}));
+      if (!res.ok){
+        if (data && data.errors) renderValidationErrors(data.errors);
+        else {
+          const rd = document.getElementById('fraudResults');
+          rd.innerHTML = `<div class="empty-msg">Server error: ${escapeHtml(data.error || 'Unexpected response')}</div>`; rd.style.display='block';
+        }
+      } else {
+        renderMinimal(data);
+      }
+    } catch(err){
+      console.error('predict_product error', err);
+      const rd = document.getElementById('fraudResults');
+      rd.innerHTML = `<div class="empty-msg">Network error: ${escapeHtml(err.message || String(err))}</div>`; rd.style.display='block';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Check';
+    }
+  }
+</script>
+</body>
+</html>
