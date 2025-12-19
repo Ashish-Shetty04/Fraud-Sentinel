@@ -30,12 +30,6 @@
     .outer-circle.left { left: -15px; top: 50%; transform: translateY(-50%); }
 
     /* Fraud form */
-
-    .fraud-form { margin-top: 20px; max-width: 500px; }
-    .fraud-form input, .fraud-form select {
-      width: 100%; padding: 8px; margin: 6px 0;
-      border: 1px solid #ccc; border-radius: 4px;
-
     .fraud-form { margin-top: 20px; max-width: 720px; }
     .fraud-form input, .fraud-form select {
       width: 100%; padding: 8px; margin: 6px 0;
@@ -45,17 +39,12 @@
     .fraud-form input.invalid, .fraud-form select.invalid {
       border-color: #e55353;
       box-shadow: 0 0 0 3px rgba(229,83,83,0.08);
-
     }
     .fraud-form button {
       margin-top: 10px; padding: 10px 15px;
       background: #5d2eea; color: white; border: none; border-radius: 4px;
       cursor: pointer;
     }
-
-    .fraud-form button:hover { background: #7a5af8; }
-    .fraud-results { margin-top: 15px; padding: 12px; border: 1px solid #ddd; border-radius: 5px; }
-
     .fraud-form button[disabled] { opacity: 0.6; cursor: not-allowed; }
     .fraud-form button:hover { background: #7a5af8; }
 
@@ -102,7 +91,6 @@
     .empty-msg { color:#475569; padding:12px; background:rgba(11,20,34,0.04); border-radius:8px; }
 
     @media (max-width:600px) { .hero-content{flex-direction:column} .related-item{flex-direction:column;align-items:flex-start} .related-site{min-width:initial} }
-
   </style>
 </head>
 <body>
@@ -185,11 +173,7 @@
       <!-- Fraud Check Form -->
       <div class="fraud-form">
         <h3>🔍 Fraud Risk Check</h3>
-
-        <input type="text" id="websiteUrl" placeholder="Website URL (e.g., example.com)" />
-
         <input type="text" id="websiteUrl" placeholder="Website URL (e.g., https://example.com/product/123)" />
-
         <input type="text" id="productName" placeholder="Product Name (optional)" />
         <select id="productCategory">
           <option value="electronics">Electronics</option>
@@ -199,16 +183,10 @@
           <option value="digital">Digital Goods</option>
           <option value="other" selected>Other</option>
         </select>
-<
-        <input type="number" id="productPrice" placeholder="Product Price" />
-        <button onclick="checkFraud()">Check Fraud Risk</button>
-
-
         <input type="number" id="productPrice" placeholder="Product Price (numeric)" />
         <button id="predictBtn" onclick="checkFraud()">Check</button>
 
         <!-- RESULT (minimal output only) -->
-
         <div id="fraudResults" class="fraud-results" style="display:none;"></div>
       </div>
     </div>
@@ -216,49 +194,6 @@
 
   <!-- Footer -->
   <div class="footer"><div class="section-container"><p>&copy; 2025 Fraud Sentinel</p></div></div>
-
-
-  <script>
-    function checkFraud() {
-      const websiteUrl = document.getElementById("websiteUrl").value;
-      const productName = document.getElementById("productName").value;
-      const productCategory = document.getElementById("productCategory").value;
-      const productPrice = document.getElementById("productPrice").value;
-
-      fetch("/predict_product", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          website_url: websiteUrl,
-          product_name: productName,
-          product_category: productCategory,
-          product_price: productPrice
-        })
-      })
-      .then(res => res.json())
-      .then(data => {
-        const resultDiv = document.getElementById("fraudResults");
-        if (data.ok) {
-          let reasonsList = "";
-          if (data.reasons && data.reasons.length) {
-            reasonsList = "<ul>" + data.reasons.map(r => `<li>${r}</li>`).join("") + "</ul>";
-          }
-          resultDiv.innerHTML = `
-            <h4>Prediction: ${data.label}</h4>
-            <p><strong>Fraud Probability:</strong> ${(data.probability*100).toFixed(2)}%</p>
-            ${reasonsList}
-          `;
-        } else {
-          resultDiv.innerHTML = `<p style="color:red;">${data.error}</p>`;
-        }
-        resultDiv.style.display = "block";
-      })
-      .catch(err => {
-        document.getElementById("fraudResults").innerHTML = `<p style="color:red;">${err.message}</p>`;
-        document.getElementById("fraudResults").style.display = "block";
-      });
-    }
-  </script>
 
 <script>
   // helpers
