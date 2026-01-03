@@ -79,18 +79,15 @@ def parse_product_info(html: str) -> dict:
 
 
 # -----------------------
-# FRAUD SCORING LOGIC (FIXED)
+# FRAUD SCORING LOGIC
 # -----------------------
 def simple_security_score(title: Optional[str], price: Any, url: str) -> int:
     score = 0
 
-    # Positive signals
     if title:
         score += 1
-
     if price:
         score += 1
-
     if url.startswith("https://"):
         score += 1
 
@@ -106,7 +103,6 @@ def simple_security_score(title: Optional[str], price: Any, url: str) -> int:
     if any(t in domain for t in trusted_sites):
         score += 2
 
-    # NEGATIVE signals
     if is_suspicious_domain(url):
         score -= 3
 
@@ -121,7 +117,6 @@ def simple_security_score(title: Optional[str], price: Any, url: str) -> int:
     if any(word in title_low for word in suspicious_keywords):
         score -= 2
 
-    # Price anomaly
     try:
         p = float(re.sub(r"[^\d.]", "", str(price)))
         if p < 1500:
@@ -139,6 +134,38 @@ def simple_prediction(score: int) -> dict:
         return {"label": "uncertain", "probability": 0.65}
     else:
         return {"label": "likely_safe", "probability": round(0.7 + 0.1 * score, 2)}
+
+
+# -----------------------
+# FALLBACK RECOMMENDATIONS
+# -----------------------
+def fallback_recommendations(product_name: str):
+    return [
+        {
+            "title": f"{product_name} – Amazon",
+            "price": "₹6495",
+            "url": "https://www.amazon.in",
+            "site": "amazon.in"
+        },
+        {
+            "title": f"{product_name} – Flipkart",
+            "price": "₹6599",
+            "url": "https://www.flipkart.com",
+            "site": "flipkart.com"
+        },
+        {
+            "title": f"{product_name} – Myntra",
+            "price": "₹6999",
+            "url": "https://www.myntra.com",
+            "site": "myntra.com"
+        },
+        {
+            "title": f"{product_name} – Official Store",
+            "price": "₹6495",
+            "url": "https://www.casio.com/in",
+            "site": "casio.com"
+        }
+    ]
 
 
 # -----------------------
@@ -179,10 +206,15 @@ def predict_product():
 
     prediction = simple_prediction(score)
 
+    related_products = fallback_recommendations(
+        product_details.get("title", "Product")
+    )
+
     return jsonify({
         "product_details": product_details,
         "security_score": score,
-        "prediction": prediction
+        "prediction": prediction,
+        "related_products": related_products
     })
 
 
