@@ -192,12 +192,14 @@ def predict_product():
         "url": website_url
     }
 
+    # Try to enrich data by scraping
     if website_url:
         html = safe_get(website_url)
         if html:
             scraped = parse_product_info(html)
             product_details.update({k: v for k, v in scraped.items() if v})
 
+    # Fraud score
     score = simple_security_score(
         product_details.get("title"),
         product_details.get("price"),
@@ -206,16 +208,34 @@ def predict_product():
 
     prediction = simple_prediction(score)
 
-    related_products = fallback_recommendations(
-        product_details.get("title", "Product")
-    )
+    # ✅ FIX probability (convert to percentage for UI)
+    prediction["probability"] = round(prediction["probability"] * 100, 2)
+
+    # ✅ Recommendations logic
+    if prediction["label"] == "likely_safe":
+        related_products = fallback_recommendations(
+            product_details.get("title", "Product")
+        )
+    else:
+        related_products = []  # Do not recommend for suspicious products
 
     return jsonify({
         "product_details": product_details,
-        "security_score": score,
+        "security_score": score * 20,  # show as percentage (0–100)
         "prediction": prediction,
         "related_products": related_products
     })
+@app.route("/related_products", methods=["POST"])
+def related_products():
+    payload = request.get_json(force=True) or {}
+    product_name = payload.get("product_name", "Product")
+
+    return jsonify({
+        "related_products": fallback_recommendations(product_name)
+    })
+
+
+
 
 
 # -----------------------
